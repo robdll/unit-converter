@@ -6,7 +6,7 @@ describe("Test Environment", () => {
   });
 });
 
-describe("Api calls", () => {
+describe("Calling hello endpoint", () => {
   const json = jest.fn();
 
   const status = jest.fn(() => {
@@ -15,14 +15,10 @@ describe("Api calls", () => {
     };
   });
 
-  it("works too", () => {
+  it("return John Doe", () => {
     const req = {};
-    const res = {
-      status,
-    };
+    const res = { status };
     hello(req, res);
-    console.log(json.mock);
-    console.log(json.mock.calls);
     const data = json.mock.calls[0][0];
     expect(data.name).toEqual("John Doe");
   });
