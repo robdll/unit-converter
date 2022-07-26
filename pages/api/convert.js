@@ -1,6 +1,18 @@
 import convertController from "../../controllers/convertController";
 
 export default function handler(req, res) {
+  // Preflight Check:
+  if (req.method == "OPTIONS") {
+    res.setHeader("Allow", "POST");
+    return res.status(202).json({});
+  }
+
+  // Allow only POST Methods
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+  }
+
   if (!req.query) {
     return res
       .status(400)
