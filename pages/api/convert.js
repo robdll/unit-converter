@@ -19,7 +19,7 @@ const cors = initMiddleware(
   })
 );
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   // Preflight Check:
   if (req.method == "OPTIONS") {
     res.setHeader("Allow", "POST");
