@@ -1,4 +1,23 @@
 import convertController from "../../controllers/convertController";
+import Cors from "cors";
+
+function initMiddleware(middleware) {
+  return (req, res) =>
+    new Promise((resolve, reject) => {
+      middleware(req, res, (result) => {
+        if (result instanceof Error) {
+          return reject(result);
+        }
+        return resolve(result);
+      });
+    });
+}
+
+const cors = initMiddleware(
+  Cors({
+    methods: ["POST", "OPTIONS"],
+  })
+);
 
 export default function handler(req, res) {
   // Preflight Check:
@@ -12,6 +31,8 @@ export default function handler(req, res) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
+
+  await cors(req, res);
 
   if (!req.query) {
     return res
