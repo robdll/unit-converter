@@ -15,20 +15,18 @@ function initMiddleware(middleware) {
 
 const cors = initMiddleware(
   Cors({
-    methods: ["POST", "OPTIONS"],
+    methods: ["OPTIONS"],
   })
 );
 
 export default async function handler(req, res) {
   // Preflight Check:
   if (req.method == "OPTIONS") {
-    res.setHeader("Allow", "POST");
     return res.status(202).json({});
   }
 
   // Allow only POST Methods
   if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
