@@ -9,7 +9,8 @@ function convertController() {
       if (result.indexOf("/") >= 0) {
         let num1 = result.split("/")[0];
         let num2 = result.split("/")[1];
-        result = !num1 || !num2 ? null : (num1 / num2).toFixed(5);
+        result =
+          !num1 || !num2 ? null : Number.parseFloat((num1 / num2).toFixed(5));
       } else {
         result =
           result.indexOf(".") >= 0
