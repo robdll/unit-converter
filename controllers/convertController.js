@@ -150,7 +150,7 @@ function convertController() {
         break;
       }
     }
-    return result;
+    return Number.parseFloat(result);
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
