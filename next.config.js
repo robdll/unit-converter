@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: "/_api/get-tests",
-        destination: "/api/fake-tests",
+        destination: "https://unit-converter-pi.vercel.app/api/fake-tests",
         permanent: true,
       },
     ];
