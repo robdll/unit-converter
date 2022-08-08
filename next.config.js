@@ -1,6 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  crossOrigin: "anonymous",
+  async headers() {
+    return [
+      {
+        source: "/_api/get-tests",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
