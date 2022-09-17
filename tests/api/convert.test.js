@@ -1,173 +1,100 @@
 import convert from "../../pages/api/convert";
+import convertController from "../../controllers/convertController";
 
 let json = jest.fn();
 let status = jest.fn(() => ({ json }));
 let res = {};
 let req = { status };
 
-describe("Calling /api/convert with a single parameter containing an accepted number and unit", () => {
-  beforeEach(() => {
-    json = jest.fn();
-    status = jest.fn(() => ({ json }));
-    req = {};
-    res = { status };
+const convertHandler = new convertController();
+
+describe("Unit Tests", () => {
+  it("convertHandler should correctly read a whole number input", () => {
+    let res = convertHandler.getNum("1gal");
+    expect(res).toBe(1);
+    res = convertHandler.getNum("2L");
+    expect(res).toBe(2);
   });
 
-  it("converts 'gal' to 'L' (1 gal to 3.78541 L)", () => {
-    req.query = { input: "1gal" };
-    convert(req, res);
-    const data = json.mock.calls[0][0];
-    console.log(`######################################`);
-    console.log(`######################################`);
-    console.log(`######################################`);
-    console.log(data);
-    expect(false).toBe(true);
+  it("convertHandler should correctly read a decimal number input", () => {
+    let res = convertHandler.getNum("1.2gal");
+    expect(res).toBe(1.2);
+    res = convertHandler.getNum("2.5L");
+    expect(res).toBe(2.5);
   });
 
-  //   it("converts 'L' to 'gal'", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
+  it("convertHandler should correctly read a fractional input", () => {
+    let res = convertHandler.getNum("1/5gal");
+    expect(res).toBe(0.2);
+    res = convertHandler.getNum("5/2L");
+    expect(res).toBe(2.5);
+  });
 
-  //     expect(false).toBe(true);
-  //   });
+  it("convertHandler should correctly read a fractional input", () => {
+    let res = convertHandler.getNum("1/5gal");
+    expect(res).toBe(0.2);
+    res = convertHandler.getNum("5/2L");
+    expect(res).toBe(2.5);
+  });
 
-  //   it("converts 'mi' to 'km' (1 mi to 1.60934 km)", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
+  it("convertHandler should correctly read a fractional input with a decimal", () => {
+    let res = convertHandler.getNum("1.5/5gal");
+    expect(res).toBe(0.3);
+    res = convertHandler.getNum("5/2.5L");
+    expect(res).toBe(2);
+  });
 
-  //     expect(false).toBe(true);
-  //   });
+  it("convertHandler should correctly return null on a double-fraction (i.e. 3/2/3)", () => {
+    let res = convertHandler.getNum("3/2/3gal");
+    expect(res).toBe(null);
+  });
 
-  //   it("converts 'km' to 'mi'", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
+  it("convertHandler should correctly default to a numerical input of 1 when no numerical input is provided", () => {
+    let res = convertHandler.getNum("gal");
+    expect(res).toBe(1);
+    res = convertHandler.getNum("L");
+    expect(res).toBe(1);
+  });
 
-  //     expect(false).toBe(true);
-  //   });
-
-  //   it("converts 'lbs' to 'kg' (1 lbs to 0.453592 kg)", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-
-  //   it("converts 'kg' to 'lbs'", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-
-  //   it("return all needed fields", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     //initNum, initUnit, returnNum, returnUnit, and string spelling out units in the format '{initNum} {initUnitString} converts to {returnNum} {returnUnitString}' with the result rounded to 5 decimals.
-  //     expect(false).toBe(true);
-  //   });
-  // });
-
-  // describe("Calling /api/convert with both uppercase and lowercase unit", () => {
-  //   beforeEach(() => {
-  //     json = jest.fn();
-  //     status = jest.fn(() => ({ json }));
-  //     req = {};
-  //     res = { status };
-  //   });
-
-  //   it("works with Kg", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  //   it("works with KG", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-
-  //   it("works with Mi", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  //   it("works with mi", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  //   it("works with MI", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  //   it("returns liter in uppercase", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  // });
-
-  // describe("Calling /api/convert with invalid parameters", () => {
-  //   beforeEach(() => {
-  //     json = jest.fn();
-  //     status = jest.fn(() => ({ json }));
-  //     req = {};
-  //     res = { status };
-  //   });
-
-  //   it("return error for invalid unit", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe("invalid unit");
-  //   });
-  //   it("return error for invalid number", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe("invalid number");
-  //   });
-  //   it("return error for invalid unit and number", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe("invalid unit and number");
-  //   });
-  // });
-
-  // describe("Calling /api/convert with weird numbers", () => {
-  //   beforeEach(() => {
-  //     json = jest.fn();
-  //     status = jest.fn(() => ({ json }));
-  //     req = {};
-  //     res = { status };
-  //   });
-
-  //   it("default to 1 when no number is provided", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-  //   it("works with decimals", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
-
-  //   it("works with fractions", () => {
-  //     convert(req, res);
-  //     const data = json.mock.calls[0][0];
-
-  //     expect(false).toBe(true);
-  //   });
+  it("convertHandler should correctly read each valid input unit", () => {
+    const tests = [
+      "12gal",
+      "2GAL",
+      "3/5l",
+      "2.2L",
+      "1lbs",
+      "LBS",
+      "kg",
+      "2.2Kg",
+      "2/3KG",
+      "12mi",
+      "3Mi",
+      "1/2MI",
+      "1/2km",
+      "2Km",
+      "3KM",
+    ];
+    const expected = [
+      "gal",
+      "gal",
+      "L",
+      "L",
+      "lbs",
+      "lbs",
+      "kg",
+      "kg",
+      "kg",
+      "mi",
+      "mi",
+      "mi",
+      "km",
+      "km",
+      "km",
+    ];
+    let res;
+    tests.forEach((test, idx) => {
+      res = convertHandler.getUnit(test);
+      expect(res).toBe(expected[idx]);
+    });
+  });
 });

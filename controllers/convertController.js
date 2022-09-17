@@ -6,16 +6,27 @@ function convertController() {
         .split("")
         .slice(0, i + 1)
         .join("");
-      if (result.indexOf("/") >= 0) {
-        let num1 = result.split("/")[0];
-        let num2 = result.split("/")[1];
-        result =
-          !num1 || !num2 ? null : Number.parseFloat((num1 / num2).toFixed(5));
+      const isFractional = result.indexOf("/") >= 0;
+      if (isFractional) {
+        // cannot contain more than a fractional number
+        if (result.split("/").length > 2) {
+          result = null;
+        } else {
+          // manage fractional number
+          let num1 = result.split("/")[0];
+          let num2 = result.split("/")[1];
+          let isValidFraction =
+            !Number.isNaN(num1) && !Number.isNaN(num2) && num2 !== 0;
+          result =
+            isValidFraction && Number.parseFloat((num1 / num2).toFixed(5));
+        }
       } else {
-        result =
-          result.indexOf(".") >= 0
-            ? Number.parseFloat(result)
-            : Number.parseInt(result);
+        const isDecimal = result.indexOf(".") >= 0;
+        if (isDecimal) {
+          result = Number.parseFloat(result);
+        } else {
+          result = Number.parseInt(result);
+        }
       }
     });
     if (typeof result === "undefined") {
@@ -38,7 +49,8 @@ function convertController() {
     if (result === "l") {
       result = result.toUpperCase();
     }
-    return result !== "L" ? result.toLowerCase() : result;
+    result = result !== "L" ? result.toLowerCase() : result;
+    return this.isValidUnit(result) ? result : null;
   };
 
   this.getReturnUnit = function (initUnit) {
